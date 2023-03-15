@@ -17,6 +17,7 @@
 ```
 - `npm이 뭐냐` : 노드 패키지 매니저라는 건데 **라이브러리 설치를 쉽게 도와주는 도구.** Node 설치하면 같이 딸려옴! 
 - `라이브러리가 뭐냐` : 코딩생활을 쉽게 만들어주는 일종의 코드 모음집 같은 겁니다. 레포트쓸 때 참고하는 참고 도서라고 비유하면 됩니다. 
+- **[라이브러리 vs 프레임워크?](https://github.com/pdy1207/MiddleTheorem/blob/main/%EA%B8%B0%EB%B3%B8%EC%A0%81%EC%9C%BC%EB%A1%9C%EC%95%8C%EA%B3%A0%EC%9E%88%EC%96%B4%EC%95%BC../%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC%20vs%20%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC.md)**
 - `npm init은 뭐냐` : package.json 파일을 만들기 위해 사용하는 명령어입니다. 
 - `package.json은 뭐냐` : 뭔 라이브러리를 썼는지 기록해두는 곳 설치한 라이브러리 목록을 자동으로 기록해주는 파일입니다.
 
