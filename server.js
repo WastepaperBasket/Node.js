@@ -16,3 +16,7 @@ app.get("/beauty", function (req, response) {
 app.get("/", function (req, response) {
   response.sendFile(__dirname + "/index.html");
 });
+
+app.get("/write", function (req, response) {
+  response.sendFile(__dirname + "/write.html");
+});
