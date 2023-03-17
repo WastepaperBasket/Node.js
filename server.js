@@ -13,4 +13,6 @@ app.get("/beauty", function (req, response) {
   response.send("뷰티 사이트 입니다.");
 });
 
-//server close ctrl + c
+app.get("/", function (req, response) {
+  response.sendFile(__dirname + "/index.html");
+});
