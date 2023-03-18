@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const MongoClient = require("mongodb").MongoClient;
 //npm install mongodb@4.1 버전마다 다름.
 MongoClient.connect(
-  "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/?retryWrites=true&w=majority",
+  "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/?admin=true&w=majority",
   function (error, client) {
     app.listen(8080, function () {
       console.log("Hello world! Listening on 8080");
