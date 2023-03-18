@@ -4,9 +4,16 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 // npm install body-parser
 
-app.listen(8080, function () {
-  console.log("Hello world! Listening on 8080");
-});
+const MongoClient = require("mongodb").MongoClient;
+//npm install mongodb@4.1 버전마다 다름.
+MongoClient.connect(
+  "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/?retryWrites=true&w=majority",
+  function (error, client) {
+    app.listen(8080, function () {
+      console.log("Hello world! Listening on 8080");
+    });
+  }
+);
 
 app.get("/pet", function (req, response) {
   response.send("펫 쇼핑사이트 입니다.");
