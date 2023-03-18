@@ -60,5 +60,13 @@ app.post("/add", (req, response) => {
 });
 
 app.get("/list", function (req, response) {
-  response.render("list.ejs"); // views file?
+  //All date
+  db.collection("post")
+    .find()
+    .toArray(function (error, result) {
+      console.log(result);
+      response.render("list.ejs", { posts: result });
+    });
+
+  // response.render("list.ejs"); // views file?
 });
