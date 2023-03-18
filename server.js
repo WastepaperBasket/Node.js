@@ -3,11 +3,14 @@ const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 // npm install body-parser
+app.set("view engine", "ejs");
+//EJS npm install ejs
 
 const MongoClient = require("mongodb").MongoClient;
 //npm install mongodb@4.1 버전마다 다름.
 
 var db;
+
 MongoClient.connect(
   "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/mongonodeapp?retryWrites=true&w=majority",
   function (error, client) {
@@ -49,9 +52,13 @@ app.post("/add", (req, response) => {
   console.log(req.body.title);
   console.log(req.body.date);
   db.collection("post").insertOne(
-    { title: req.body.title, Date: req.body.date, _id: 1 },
+    { title: req.body.title, Date: req.body.date },
     function (error, result) {
       console.log("complete!");
     }
   );
+});
+
+app.get("/list", function (req, response) {
+  response.render("list.ejs"); // views file?
 });
