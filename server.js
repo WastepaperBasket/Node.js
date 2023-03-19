@@ -51,10 +51,17 @@ app.post("/add", (req, response) => {
   response.sendFile(__dirname + "/index.html");
   console.log(req.body.title);
   console.log(req.body.date);
-  db.collection("post").insertOne(
-    { title: req.body.title, Date: req.body.date },
+  db.collection("counter").findOne(
+    { name: "게시물갯수" },
     function (error, result) {
-      console.log("complete!");
+      console.log(result.totalPost);
+      var tot = result.totalPost;
+      db.collection("post").insertOne(
+        { title: req.body.title, Date: req.body.date, _id: tot + 1 },
+        function (error, result) {
+          console.log("complete!");
+        }
+      );
     }
   );
 });
