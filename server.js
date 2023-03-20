@@ -85,3 +85,11 @@ app.get("/list", function (req, response) {
 
   // response.render("list.ejs"); // views file?
 });
+// 요청 응답 ····.
+app.delete("/delete", function (req, response) {
+  console.log(req.body);
+  req.body._id = parseInt(req.body._id);
+  db.collection("post").deleteOne(req.body, function (error, result) {
+    console.log("삭제완료");
+  });
+});

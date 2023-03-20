@@ -30,31 +30,51 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#"
+            <a class="nav-link" href="/"
               >Home <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Write</a>
+            <a class="nav-link" href="write">Write</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Test</a>
+            <a class="nav-link" href="list">List</a>
           </li>
         </ul>
       </div>
     </nav>
 
-    <h1>What is server?</h1>
-    <% for(let i=0; i<posts.length; i++){ %>
-      <h4>할일 제목 <%= posts[i].title %> </h4>
-      <p>마감 날짜  <%= posts[i].Date %> </p>
-    <% } %>
+    <h1 class="ml-2 my-3">What is server?</h1>
+    
+    <ul class="list-group list-group-flush">
+      <% for(let i=0; i<posts.length; i++){ %>
+      <li class="list-group-item " aria-current="true">
+        <p>글 번호 <%= posts[i]._id %></p>
+        <h5>할일 제목 <%= posts[i].title %> </h5>
+        <p>마감 날짜  <%= posts[i].Date %> </p>
+        <button class="btn btn-danger mb-3 ml-3" data-id="<%= posts[i]._id %>">삭제</button>
+      <% } %>
+      </li>      
+    </ul>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> <!-- code delect -->
+
+    <script>
+
+      $(".btn-danger").click(function(e){
+        var letter = e.target.dataset.id; // ⭐⭐⭐
+        console.log(letter)
+        $.ajax({
+          method : 'DELETE',
+          url : '/delete',
+          data : { _id : letter},
+        }).done(function(결과){
+          
+        }).fail(function(){
+
+        })
+      })
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
