@@ -56,10 +56,18 @@ app.post("/add", (req, response) => {
     function (error, result) {
       console.log(result.totalPost);
       var tot = result.totalPost;
+
       db.collection("post").insertOne(
         { title: req.body.title, Date: req.body.date, _id: tot + 1 },
         function (error, result) {
           console.log("complete!");
+          db.collection("counter").updateOne(
+            { name: "게시물갯수" },
+            { $inc: { totalPost: 1 } },
+            function (error, result) {
+              if (error) return console.log(error);
+            }
+          );
         }
       );
     }
