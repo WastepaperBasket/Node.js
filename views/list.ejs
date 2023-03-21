@@ -63,15 +63,19 @@
 
       $(".btn-danger").click(function(e){
         var letter = e.target.dataset.id; // ⭐⭐⭐
-        console.log(letter)
+        console.log(letter);
+        var click = $(this);
         $.ajax({
           method : 'DELETE',
           url : '/delete',
           data : { _id : letter},
         }).done(function(결과){
-          
-        }).fail(function(){
-
+          console.log("성공했음!!!!");
+          // location.reload();
+          click.parent('li').fadeOut();
+        }).fail(function(xhr,textStatus,errorThrown){
+          console.log("실패!")
+          console.log(xhr,textStatus,textStatus)
         })
       })
     </script>
