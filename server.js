@@ -94,3 +94,15 @@ app.delete("/delete", function (req, response) {
     response.status(200).send({ message: "성공했습니다." });
   });
 });
+
+app.get("/detail/:id", function (req, response) {
+  db.collection("post").findOne(
+    { _id: parseInt(req.params.id) },
+    function (error, result) {
+      if (error) return console.log(error);
+      console.log(result);
+      response.render("detail.ejs", { data: result });
+      response.status(200).send({ message: "서버이동" });
+    }
+  );
+});
