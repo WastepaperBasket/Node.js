@@ -25,8 +25,8 @@ MongoClient.connect(
     //   }
     // );
 
-    app.listen(8080, function () {
-      console.log("Hello world! Listening on 8080");
+    app.listen(8081, function () {
+      console.log("Hello world! Listening on 8081");
     });
   }
 );
@@ -99,10 +99,10 @@ app.get("/detail/:id", function (req, response) {
   db.collection("post").findOne(
     { _id: parseInt(req.params.id) },
     function (error, result) {
-      if (error) return console.log(error);
       console.log(result);
-      response.render("detail.ejs", { data: result });
-      response.status(200).send({ message: "서버이동" });
+      response.render("detail.ejs", { data: result }); //한번밖에못씀..
+      if (error) return console.log(error);
+      // response.status(200).send({ message: "서버이동" });
     }
   );
 });
