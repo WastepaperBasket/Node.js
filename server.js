@@ -9,6 +9,8 @@ app.set("view engine", "ejs");
 const MongoClient = require("mongodb").MongoClient;
 //npm install mongodb@4.1 버전마다 다름.
 
+app.use("/public", express.static("public")); //css
+
 var db;
 
 MongoClient.connect(
@@ -40,15 +42,15 @@ app.get("/beauty", function (req, response) {
 });
 
 app.get("/", function (req, response) {
-  response.sendFile(__dirname + "/index.html");
+  response.render("index.ejs");
 });
 
 app.get("/write", function (req, response) {
-  response.sendFile(__dirname + "/write.html");
+  response.render("write.ejs");
 });
 
 app.post("/add", (req, response) => {
-  response.sendFile(__dirname + "/index.html");
+  response.render("index.ejs");
   console.log(req.body.title);
   console.log(req.body.date);
   db.collection("counter").findOne(
