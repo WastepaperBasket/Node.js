@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const { response } = require("express");
 app.use(bodyParser.urlencoded({ extended: true }));
 // npm install body-parser
 app.set("view engine", "ejs");
@@ -10,6 +11,9 @@ const MongoClient = require("mongodb").MongoClient;
 //npm install mongodb@4.1 버전마다 다름.
 
 app.use("/public", express.static("public")); //css
+
+const methodOverride = require("method-override");
+app.use(methodOverride("_method")); //npm install method-override
 
 var db;
 
@@ -105,6 +109,28 @@ app.get("/detail/:id", function (req, response) {
       response.render("detail.ejs", { data: result }); //한번밖에못씀..
       if (error) return console.log(error);
       // response.status(200).send({ message: "서버이동" });
+    }
+  );
+});
+
+app.get("/edit/:id", function (req, response) {
+  db.collection("post").findOne(
+    { _id: parseInt(req.params.id) },
+    function (error, result) {
+      response.render("edit.ejs", { post: result });
+      console.log(result);
+      if (error) return console.log(error);
+    }
+  );
+});
+
+app.put("/edit", function (req, response) {
+  db.collection("post").updateOne(
+    { _id: parseInt(req.body.id) },
+    { $set: { title: req.body.title, Date: req.body.Date } },
+    function (error, result) {
+      console.log("수정완료" + result);
+      response.redirect("/list");
     }
   );
 });
