@@ -159,6 +159,20 @@ app.post(
   }
 );
 
+app.get("/mypage", loginCheck, function (req, response) {
+  console.log(req.user);
+  response.render("mypage.ejs", { 사용자: req.user });
+});
+
+function loginCheck(req, response, next) {
+  if (req.user) {
+    // console.log("로그인체크 값" + req.user);
+    next();
+  } else {
+    response.send("로그인 안하냐?");
+  }
+}
+
 passport.use(
   new LocalStrategy(
     {
@@ -168,7 +182,7 @@ passport.use(
       passReqToCallback: false,
     },
     function (입력한아이디, 입력한비번, done) {
-      console.log(입력한아이디, 입력한비번);
+      // console.log(입력한아이디, 입력한비번);
       db.collection("login").findOne(
         { id: 입력한아이디 },
         function (에러, 결과) {
@@ -191,5 +205,7 @@ passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 passport.deserializeUser(function (아이디, done) {
-  done(null, {});
+  db.collection("login").findOne({ id: 아이디 }, function (err, result) {
+    done(null, result);
+  });
 });
