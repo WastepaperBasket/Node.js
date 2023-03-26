@@ -31,8 +31,8 @@ MongoClient.connect(
     //   }
     // );
 
-    app.listen(8081, function () {
-      console.log("Hello world! Listening on 8081");
+    app.listen(8080, function () {
+      console.log("Hello world! Listening on 8080");
     });
   }
 );
@@ -133,4 +133,63 @@ app.put("/edit", function (req, response) {
       response.redirect("/list");
     }
   );
+});
+
+//npm install passport passport-local express-session
+
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const session = require("express-session");
+
+app.use(session({ secret: "code", resave: true, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/login", function (req, response) {
+  response.render("login.ejs");
+});
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/fail",
+  }),
+  function (req, response) {
+    response.redirect("/");
+  }
+);
+
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "id",
+      passwordField: "pw",
+      session: true,
+      passReqToCallback: false,
+    },
+    function (입력한아이디, 입력한비번, done) {
+      console.log(입력한아이디, 입력한비번);
+      db.collection("login").findOne(
+        { id: 입력한아이디 },
+        function (에러, 결과) {
+          if (에러) return done(에러);
+
+          if (!결과)
+            return done(null, false, { message: "존재하지않는 아이디요" });
+          if (입력한비번 == 결과.pw) {
+            return done(null, 결과);
+          } else {
+            return done(null, false, { message: "비번틀렸어요" });
+          }
+        }
+      );
+    }
+  )
+);
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+passport.deserializeUser(function (아이디, done) {
+  done(null, {});
 });
