@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../public/main.css" />
     <title>Hello, Node.js!</title>
-    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
@@ -18,6 +18,21 @@
     <%- include('nav.html') %>
   <div class="container">
     <h4 class="ml-2 my-3 text-center">What is server?</h4>
+
+<!-- search -->
+    <div class="container input-group mb-2">
+      <input class="form-control" id="search-input">
+      <button class="input-group-append btn btn-danger" id="search">검색</button>
+    </div>
+
+    <script>
+      $('#search').click(function(){
+        var inputval = $('#search-input').val();
+        window.location.replace(`/search?value=${inputval}`)
+      })
+    </script>
+
+
     <div class="text-center">
     <ul class="list-group list-group-flush">
       <% for(let i=0; i<posts.length; i++){ %>
@@ -25,18 +40,18 @@
         <p>글 번호 <%= posts[i]._id %></p>
         <h5>할일 제목 <%= posts[i].title %> </h5>
         <p>마감 날짜  <%= posts[i].Date %> </p>
-        <button class="btn btn-danger mb-3 ml-3" data-id="<%= posts[i]._id %>">삭제</button>
+        <button class="btn btn-danger mb-3 ml-3" id="delect" data-id="<%= posts[i]._id %>">삭제</button>
         <a class="btn btn-primary mb-3 ml-3"  href="/detail/<%= posts[i]._id %>" data-id="<%= posts[i]._id %>">이동</a>
       <% } %>
       </li>      
     </ul>
   </div>
   </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> <!-- code delect -->
+     <!-- code delect -->
 
     <script>
 
-      $(".btn-danger").click(function(e){
+      $(".delect").click(function(e){
         var letter = e.target.dataset.id; // ⭐⭐⭐
         console.log(letter);
         var click = $(this);

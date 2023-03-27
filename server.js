@@ -155,7 +155,7 @@ app.post(
     failureRedirect: "/fail",
   }),
   function (req, response) {
-    response.redirect("/");
+    response.redirect("/mypage");
   }
 );
 
@@ -208,4 +208,14 @@ passport.deserializeUser(function (아이디, done) {
   db.collection("login").findOne({ id: 아이디 }, function (err, result) {
     done(null, result);
   });
+});
+
+app.get("/search", (req, response) => {
+  console.log(req.query.value);
+  db.collection("post")
+    .find({ title: req.query.value })
+    .toArray((error, result) => {
+      console.log(result);
+      response.render("result.ejs", { result: result });
+    });
 });
