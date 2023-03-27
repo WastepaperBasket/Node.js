@@ -17,7 +17,7 @@
   <body>
     <%- include('nav.html') %>
     <div class="container">
-      <h4 class="ml-2 my-3 text-center">What is server?</h4>
+      <h4 class="ml-2 my-3 text-center">What is search?</h4>
 
       <!-- search -->
       <div class="container input-group mb-2">
@@ -32,6 +32,13 @@
           var inputval = $("#search-input").val();
           window.location.replace(`/search?value=${inputval}`);
         });
+
+        /* js query string ? */
+
+        // var test = { 이름 : '값' , 이름2 : '값2'}
+        // $.param(test)
+
+        // $(폼태그).serialize()
       </script>
     </div>
     <div class="text-center">

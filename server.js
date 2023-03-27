@@ -210,12 +210,47 @@ passport.deserializeUser(function (아이디, done) {
   });
 });
 
+/* full scean */
+// app.get("/search", (req, response) => {
+//   console.log(req.query.value);
+//   db.collection("post")
+//     .find({ title: req.query.value })
+//     .toArray((error, result) => {
+//       console.log(result);
+//       response.render("search.ejs", { result: result });
+//     });
+// });
+
+// app.get("/search", (req, response) => {
+//   console.log(req.query.value);
+//   db.collection("post")
+//     .find({ $text: { $search: req.query.value } })
+//     .toArray((error, result) => {
+//       console.log(result);
+//       response.render("search.ejs", { result: result });
+//     });
+// });
+
 app.get("/search", (req, response) => {
   console.log(req.query.value);
+  var 검색조건 = [
+    {
+      $search: {
+        index: "titleSearch",
+        text: {
+          query: req.query.value,
+          path: ["title", Date], // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+        },
+      },
+    },
+    { $sort: { _id: 1 } },
+    { $limit: 5 },
+    // { $porject: {제목 : 1 , _id : 0 , score : {$meta : "searchScore"}} }, //검색조건 필터주기
+  ];
   db.collection("post")
-    .find({ title: req.query.value })
+    .aggregate(검색조건)
     .toArray((error, result) => {
       console.log(result);
-      response.render("result.ejs", { result: result });
+      response.render("search.ejs", { result: result });
     });
 });
