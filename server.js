@@ -18,7 +18,8 @@ app.use(methodOverride("_method")); //npm install method-override
 var db;
 
 MongoClient.connect(
-  "mongodb://admin:qwer1234@svc.sel3.cloudtype.app:32622/?authMechanism=DEFAULT",
+  "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/mongonodeapp?retryWrites=true&w=majority", //기존 서버
+  // mongodb://admin:qwer1234@svc.sel3.cloudtype.app:32622/?authMechanism=DEFAULT DB서버
   function (error, client) {
     if (error) return console.log(error);
 
