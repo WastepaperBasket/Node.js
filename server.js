@@ -18,7 +18,7 @@ app.use(methodOverride("_method")); //npm install method-override
 var db;
 
 MongoClient.connect(
-  "mongodb+srv://admin:qwer1234@cluster0.zap7sas.mongodb.net/mongonodeapp?retryWrites=true&w=majority",
+  "mongodb://admin:qwer1234@svc.sel3.cloudtype.app:32622/?authMechanism=DEFAULT",
   function (error, client) {
     if (error) return console.log(error);
 
@@ -53,33 +53,6 @@ app.get("/write", function (req, response) {
   response.render("write.ejs");
 });
 
-app.post("/add", (req, response) => {
-  response.render("index.ejs");
-  console.log(req.body.title);
-  console.log(req.body.date);
-  db.collection("counter").findOne(
-    { name: "게시물갯수" },
-    function (error, result) {
-      console.log(result.totalPost);
-      var tot = result.totalPost;
-
-      db.collection("post").insertOne(
-        { title: req.body.title, Date: req.body.date, _id: tot + 1 },
-        function (error, result) {
-          console.log("complete!");
-          db.collection("counter").updateOne(
-            { name: "게시물갯수" },
-            { $inc: { totalPost: 1 } },
-            function (error, result) {
-              if (error) return console.log(error);
-            }
-          );
-        }
-      );
-    }
-  );
-});
-
 app.get("/list", function (req, response) {
   //All date
   db.collection("post")
@@ -90,15 +63,6 @@ app.get("/list", function (req, response) {
     });
 
   // response.render("list.ejs"); // views file?
-});
-// 요청 응답 ····.
-app.delete("/delete", function (req, response) {
-  console.log(req.body);
-  req.body._id = parseInt(req.body._id);
-  db.collection("post").deleteOne(req.body, function (error, result) {
-    console.log("삭제완료");
-    response.status(200).send({ message: "성공했습니다." });
-  });
 });
 
 app.get("/detail/:id", function (req, response) {
@@ -210,6 +174,57 @@ passport.deserializeUser(function (아이디, done) {
   });
 });
 
+/* Sign In insert */
+app.post("/register", (req, response) => {
+  db.collection("login").insertOne(
+    { id: req.body.id, pw: req.body.pw },
+    function (error, result) {
+      response.redirect("/");
+    }
+  );
+});
+
+app.post("/add", (req, response) => {
+  response.render("index.ejs");
+  console.log(req.body.title);
+  console.log(req.body.date);
+  db.collection("counter").findOne(
+    { name: "게시물갯수" },
+    function (error, result) {
+      console.log(result.totalPost);
+      var tot = result.totalPost;
+      var save = {
+        title: req.body.title,
+        Date: req.body.date,
+        _id: tot + 1,
+        usersave: req.user._id,
+      };
+      db.collection("post").insertOne(save, function (error, result) {
+        console.log("complete!");
+        db.collection("counter").updateOne(
+          { name: "게시물갯수" },
+          { $inc: { totalPost: 1 } },
+          function (error, result) {
+            if (error) return console.log(error);
+          }
+        );
+      });
+    }
+  );
+});
+// 요청 응답 ····.
+app.delete("/delete", function (req, response) {
+  console.log(req.body);
+  req.body._id = parseInt(req.body._id);
+
+  var userDate = { _id: req.body._id, usersave: req.user._id };
+
+  db.collection("post").deleteOne(userDate, function (error, result) {
+    if (error) console.log(error);
+    console.log("삭제완료");
+    response.status(200).send({ message: "성공했습니다." });
+  });
+});
 /* full scean */
 // app.get("/search", (req, response) => {
 //   console.log(req.query.value);
@@ -254,3 +269,7 @@ app.get("/search", (req, response) => {
       response.render("search.ejs", { result: result });
     });
 });
+
+app.use("/shop", require("./routes/shop.js"));
+
+app.use("/board/sub", require("./routes/board.js"));
