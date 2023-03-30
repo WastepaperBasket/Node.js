@@ -138,6 +138,32 @@ function loginCheck(req, response, next) {
   }
 }
 
+const { ObjectId } = require("mongodb");
+// ObjectID 안에 담고싶으면
+
+app.post("/chatroom", loginCheck, function (req, response) {
+  var save = {
+    title: "chat",
+    member: [ObjectId(req.body.당한id), req.user._id],
+    date: new Date(),
+  };
+
+  db.collection("chatroom")
+    .insertOne(save)
+    .then((result) => {
+      response.send("저장완료");
+    });
+});
+
+app.get("/chat", loginCheck, function (req, response) {
+  db.collection("chatroom")
+    .find({ member: req.user._id })
+    .toArray()
+    .then((result) => {
+      response.render("chat.ejs", { data: result });
+    });
+});
+
 passport.use(
   new LocalStrategy(
     {
@@ -274,3 +300,41 @@ app.get("/search", (req, response) => {
 app.use("/shop", require("./routes/shop.js"));
 
 app.use("/board/sub", require("./routes/board.js"));
+
+// npm install multer
+
+let multer = require("multer");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/image");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); //+ '날짜' new Date()
+  },
+  fileFilter: function (req, file, callback) {
+    var ext = path.extname(file.originalname);
+    if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+      return callback(new Error("PNG, JPG만 업로드하세요"));
+    }
+    callback(null, true);
+  },
+  limits: {
+    fileSize: 1024 * 1024,
+  },
+});
+
+var upload = multer({ storage: storage });
+
+app.get("/upload", (req, response) => {
+  response.render("upload.ejs");
+});
+
+app.post("/upload", upload.single("photo"), function (req, response) {
+  response.send("사진업로드 완료");
+});
+//upload.array('inputname', 받을 최대 갯수)
+//input에 관해서도 html 속성 변경해야함.
+
+app.get("/image/:imageName", function (req, response) {
+  response.sendFile(__dirname + "/public/image/" + req.params.imageName);
+});
