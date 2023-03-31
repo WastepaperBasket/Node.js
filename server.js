@@ -164,6 +164,21 @@ app.get("/chat", loginCheck, function (req, response) {
     });
 });
 
+app.post("/message", loginCheck, function (req, response) {
+  var savemessage = {
+    parent: req.body.parent,
+    userid: req.user._id,
+    content: req.body.content,
+    date: new Date(),
+  };
+  db.collection("message")
+    .insertOne(savemessage)
+    .then((result) => {
+      console.log("DB저장 성공");
+      response.send(result);
+    });
+});
+
 passport.use(
   new LocalStrategy(
     {
@@ -337,4 +352,15 @@ app.post("/upload", upload.single("photo"), function (req, response) {
 
 app.get("/image/:imageName", function (req, response) {
   response.sendFile(__dirname + "/public/image/" + req.params.imageName);
+});
+
+app.get("/message/:parentid", loginCheck, function (req, response) {
+  response.writeHead(200, {
+    Connection: "keep-alive",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
+
+  response.write("event: test\n");
+  response.write("data: 안녕하세요\n\n");
 });
