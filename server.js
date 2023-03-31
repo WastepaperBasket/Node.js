@@ -143,6 +143,7 @@ const { ObjectId } = require("mongodb");
 
 app.post("/chatroom", loginCheck, function (req, response) {
   var save = {
+    parent: req.body.parent,
     title: "chat",
     member: [ObjectId(req.body.당한id), req.user._id],
     date: new Date(),
@@ -178,7 +179,22 @@ app.post("/message", loginCheck, function (req, response) {
       response.send(result);
     });
 });
+app.get("/message/:_id", loginCheck, function (req, response) {
+  response.writeHead(200, {
+    Connection: "keep-alive",
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+  });
 
+  db.collection("message")
+    .find({ parent: req.params._id })
+    .toArray()
+    .then((result) => {
+      console.log(result);
+      response.write("event: test\n");
+      response.write(`data: ${JSON.stringify(result)}\n\n`);
+    });
+});
 passport.use(
   new LocalStrategy(
     {
@@ -352,15 +368,4 @@ app.post("/upload", upload.single("photo"), function (req, response) {
 
 app.get("/image/:imageName", function (req, response) {
   response.sendFile(__dirname + "/public/image/" + req.params.imageName);
-});
-
-app.get("/message/:parentid", loginCheck, function (req, response) {
-  response.writeHead(200, {
-    Connection: "keep-alive",
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-  });
-
-  response.write("event: test\n");
-  response.write("data: 안녕하세요\n\n");
 });

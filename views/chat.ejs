@@ -72,8 +72,16 @@
 
     <script>
       var thischatid;
+      var eventSource;
       $(".list-group-item").click(function () {
-        var thischatid = this.dataset.id;
+        thischatid = this.dataset.id;
+        thischatid = $(this).attr("data-id");
+
+        eventSource = new EventSource("/message/" + thischatid);
+        eventSource.addEventListener("test", function (e) {
+          console.log(e.data);
+          consolo.log(JSON.parse(e.data));
+        });
       });
       $("#send").click(function () {
         var chatinput = $("#chat-input").val();
